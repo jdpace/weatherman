@@ -1,12 +1,14 @@
+require 'ostruct'
+
 class WeatherManResponse
   attr_reader :current_conditions, :forecast, :api_url
   
-  def initialize(simple_xml, api_url = nil)
+  def initialize(simple_xml, url = nil)
     @current_conditions = build_current_conditions(simple_xml['cc'][0])
     @forecast = build_forecast(simple_xml['dayf'][0]['day'])
     
     # The api url that was called to generate this response
-    @api_url = api_url
+    @api_url = url
   end
   
   def build_current_conditions(response = {})
@@ -22,24 +24,24 @@ class WeatherManResponse
     cc.humidity             = response['hmid'][0]
     cc.visibility           = response['vis'][0]
     cc.dew_point            = response['dewp'][0]
-    cc.barometric_pressure  = {
+    cc.barometric_pressure  = WeatherManBarometer.new({
                                 :reading      => response['bar'][0]['r'][0],
                                 :description  => response['bar'][0]['d'][0]
-                              }
-    cc.wind                 = {
+                              })
+    cc.wind                 = WeatherManWind.new({
                                 :speed        => response['wind'][0]['s'][0],
                                 :gust         => response['wind'][0]['gust'][0],
                                 :degrees      => response['wind'][0]['d'][0],
                                 :direction    => response['wind'][0]['t'][0]
-                              }
-    cc.uv                   = {
+                              })
+    cc.uv                   = WeatherManUV.new({
                                 :index        => response['uv'][0]['i'][0],
                                 :description  => response['uv'][0]['t'][0]
-                              }
-    cc.moon                 = {
+                              })
+    cc.moon                 = WeatherManMoon.new({
                                 :icon_code    => response['moon'][0]['icon'][0],
                                 :description  => response['moon'][0]['t'][0]
-                              }
+                              })
     cc    
   end
   
@@ -72,12 +74,42 @@ class WeatherManForecast < Array
   WEEK_DAYS = %w(sunday monday tuesday wednesday thursday friday saturday)
   WEEK_DAYS.each {|day| attr_reader day.to_sym}
   
+  # Assign a forecast day to a week day accessor as it gets added
+  # allows for accessors like forecast.monday -> <WeatherManForecastDay>
   def <<(day)
     super
-    offset = Time.now.wday
-    wday = (self.size - 1) + offset
-    wday = wday > 6 ? wday - 6 : wday # I know theres a better way to do this, too tired now
-    eval("@#{WEEK_DAYS[wday]} = day")
+    eval("@#{day.week_day.downcase} = day")
+  end
+  
+  def today
+    self[0]
+  end
+  
+  def tomorrow
+    self[1]
+  end
+  
+  # Returns a forecast for a day given by a Date, DateTime,
+  # Time, or a string that can be parsed to a date
+  def for(date = Date.today)
+    # Format date into a Date class
+    date = case date.class.name
+           when 'String'
+             Date.parse(date)
+           when 'Date'
+             date
+           when 'DateTime'
+             Date.new(date.year, date.month, date.day)
+           when 'Time'
+             Date.new(date.year, date.month, date.day)
+           end
+    
+    day = nil
+    # find the matching forecast day, if any
+    self.each do |fd|
+      day = fd if date == fd.date
+    end
+    return day
   end
 end
 
@@ -90,11 +122,13 @@ class WeatherManForecastDay
                 :sunset,
                 :day,
                 :night
-                
+  
+  # Build a new WeatherManForecastDay based on
+  # A response from the Weather Channel
   def self.build(response = {})
     fd = new
     fd.week_day = response['t']
-    fd.date     = response['dt']
+    fd.date     = Date.parse(response['dt'])
     fd.high     = response['hi'][0]
     fd.low      = response['low'][0]
     fd.sunrise  = response['sunr'][0]
@@ -105,18 +139,40 @@ class WeatherManForecastDay
   end
   
   protected
+    # Build a part day
     def self.build_part(part)
-      {
+      WeatherManForecastPart.new({
         :icon_code            => part['icon'][0],
         :description          => part['t'][0],
         :chance_percipitation => part['ppcp'][0],
         :humidity             => part['hmid'][0],
-        :wind                 => {
+        :wind                 => WeatherManWind.new({
                                    :speed     => part['wind'][0]['s'][0],
                                    :gust      => part['wind'][0]['gust'][0],
                                    :degrees   => part['wind'][0]['d'][0],
-                                   :direction => part['wind'][0]['t'][0]
-                                 }
-      }
+                                   :direction => part['wind'][0]['t'][0]     
+                                 })
+      })
     end
+end
+
+# =================================
+# WeatherMan Response classes
+# used for tracking groups of data
+# ie. Forecast parts, Barometer,
+# UV, Moon, and Wind
+# =================================
+class WeatherManForecastPart < OpenStruct
+end
+
+class WeatherManBarometer < OpenStruct
+end
+
+class WeatherManUV < OpenStruct
+end
+
+class WeatherManMoon < OpenStruct
+end
+
+class WeatherManWind < OpenStruct
 end

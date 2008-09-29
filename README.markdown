@@ -1,0 +1,76 @@
+WeatherMan
+==========
+
+A Ruby Gem that wraps the Weather Channel, inc. XML data feed
+written by Jared Pace, Codeword: Studios (http://codewordstudios.com),
+based on the [rweather gem](http://github.com/ckozus/rweather) by [Carlos Kozuszko](http://www.ckozus.com.ar/blog/).
+
+
+Installation
+------------
+
+		% sudo gem sources -a http://gems.github.com # (if you haven't already)
+		% sudo gem install weatherman
+
+Usage
+-----
+
+Find or load a location:
+
+		require 'weather_man'
+		WeatherMan.partner_id = '0123456789'
+		WeatherMan.license_key = '0123456789abcdef'
+		
+		# Search for a location
+		# Returns an array of WeatherMan objects
+		locations = WeatherMan.search('New York')
+		
+		# or if you know the location id or just want to use a US Zip code
+		ny = WeatherMan.new('USNY0996')
+		
+Fetch the weather:
+		
+		# Fetch the current conditions and 5 day forecast in 'standard' units
+		weather = ny.fetch
+		
+		# Fetch only current conditions in metric units
+		weather = ny.fetch(:days => 0, :unit => 'm')
+		
+		# Fetch a 3 day forecast only
+		weather = ny.fetch(:days => 3, :current_conditions => false)
+		
+Look at the Current Conditions:
+
+		# current temperature
+		temp = weather.current_conditions.temperature
+		
+		feels_like = weather.current_conditions.feels_like
+		
+		wind_speed = weather.current_conditions.wind.speed
+		wind_direction = weather.current_conditions.wind.direction
+		
+Look at the forecast:
+		# how many days?
+		weather.forecast.size
+		
+		# Some different forecasts
+		weather.forecast.today
+		weather.forecast.tomorrow
+		weather.forecast.monday
+		weather.forecast.for(Date.today)
+		weather.forecast.for(3.days.from_now) # Note: using rails core extensions
+		weather.forecast.for('Sep 1')
+		
+		# data for a forecast
+		friday = weather.forecast.friday
+		
+		high_temp = friday.high
+		low_temp = friday.low
+		
+		# forecasts are split into 2 parts day/night
+		friday.day.description # Partly Cloudy, Sunny...
+		friday.day.chance_percipitation # 0..100
+		
+		night_wind_speed = friday.night.wind.speed
+		
+*TODO:* Document all attributes

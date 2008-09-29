@@ -21,6 +21,8 @@ class WeatherMan
   # partner id and license key can be obtained
   # when you sign up for the weather.com xml api at
   # http://www.weather.com/services/xmloap.html
+  @@partner_id = nil
+  @@license_key = nil
   def self.partner_id; @@partner_id; end;
   def self.partner_id=(pid); @@partner_id = pid; end;
   def self.license_key; @@license_key; end;
@@ -30,25 +32,18 @@ class WeatherMan
   # name is the human readable name of the location ie. 'New York, NY'
   attr_reader :id, :name
   
-  def initialize(location_id, location_name = 'n/a', verify_location = true)
+  def initialize(location_id, location_name = 'n/a')
     @id = location_id
     @name = location_name
     
     self.class.check_authentication
-    
-    if verify_location
-      # Send a call to the api to check that this location exists
-      # raise(WeatherManLocationNotFoundError, "WeatherMan: A location could not be found using ID=#{location_id}")
-    end
   end
   
   def fetch(options = {})
     options = default_forecast_options.merge(options)
     api_url = weather_url(options) 
     
-    if response = self.class.fetch_response(api_url)
-      WeatherManResponse.new(response, api_url)
-    end
+    WeatherManResponse.new(self.class.fetch_response(api_url), api_url)
   end
   
   # Return an array of matching locations
@@ -57,21 +52,15 @@ class WeatherMan
     check_authentication
     
     if response = fetch_response(search_url(:where => where))
-      response['loc'] ? response['loc'].map {|location| new(location['id'], location['content'], false)} : []
+      response['loc'] ? response['loc'].map {|location| new(location['id'], location['content'])} : []
     end
-  end
-  
-  # TODO: REMOVE THIS!!!!!!!!!!!
-  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  def self.defaults
-    @@partner_id = '1075758518'
-    @@license_key = '7c731d27fae916fb'
   end
   
   protected
     # API url for accssing weather
     def weather_url(options = {})
       options = encode_options(options)
+      options[:unit] = options[:unit].to_s.downcase[0..0] if options[:unit] # Allows for :metric, 'metric', 'Metric', or standard 'm'
 
       url  = "http://xoap.weather.com/weather/local/#{self.id}"
       url << "?par=#{@@partner_id}"
@@ -87,7 +76,7 @@ class WeatherMan
     def default_forecast_options
       {
         :current_conditions => true,
-        :days               => 5,
+        :days               => 5, # 0 - 5
         :unit               => DEFAULT_UNIT
       }
     end
@@ -104,10 +93,11 @@ class WeatherMan
       xml_data = Net::HTTP.get_response(URI.parse(api_url)).body
       response = XmlSimple.xml_in(xml_data)
       
+      # Check if a response was returned at all
+      raise(WeatherManNoResponseError, "WeatherMan Error: No Response.") unless response
+      
       # Check if API call threw an error
-      if response['err']
-        raise(WeatherManApiError, "WeatherMan Error #{response['err']['type']}: #{response['err']['content']}")
-      end
+      raise(WeatherManApiError, "WeatherMan Error #{response['err'][0]['type']}: #{response['err'][0]['content']}") if response['err']
       
       response
     end
