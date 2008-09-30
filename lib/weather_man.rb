@@ -39,8 +39,8 @@ class WeatherMan
     self.class.check_authentication
   end
   
-  def fetch(options = {})
-    options = default_forecast_options.merge(options)
+  def fetch(opts = {})
+    options = default_forecast_options.merge(opts)
     api_url = weather_url(options) 
     
     WeatherManResponse.new(self.class.fetch_response(api_url), api_url)
@@ -84,7 +84,7 @@ class WeatherMan
     # Encode a hash of options to be used as request parameters
     def encode_options(options)
       options.each do |key,value|
-        options[key] = URI.encode(value.to_s)
+        options[key] = URI.encode(value.to_s) unless value.is_a?(TrueClass) || value.is_a?(FalseClass)
       end
     end
     

@@ -1,59 +1,78 @@
 require 'ostruct'
 
 class WeatherManResponse
-  attr_reader :current_conditions, :forecast, :api_url
+  attr_reader :current_conditions, :forecast, :api_url, :unit_temperature, :unit_distance, :unit_speed, :unit_pressure, :links
   
   def initialize(simple_xml, url = nil)
-    @current_conditions = build_current_conditions(simple_xml['cc'][0])
-    @forecast = build_forecast(simple_xml['dayf'][0]['day'])
+    @current_conditions = simple_xml['cc'] ? build_current_conditions(simple_xml['cc'][0]) : nil
+    @forecast = simple_xml['dayf'] ? build_forecast(simple_xml['dayf'][0]['day']) : nil
+    
+    # Promotional links required by Weather Channel, Inc.
+    @links = simple_xml['lnks'] ? build_links(simple_xml['lnks'][0]['link']) : nil
+    
+    # Capture the units
+    @unit_temperature = simple_xml['head'][0]['ut'][0]
+    @unit_distance    = simple_xml['head'][0]['ud'][0]
+    @unit_speed       = simple_xml['head'][0]['us'][0]
+    @unit_pressure    = simple_xml['head'][0]['up'][0]
     
     # The api url that was called to generate this response
     @api_url = url
   end
   
-  def build_current_conditions(response = {})
-    return nil if response.nil? || response.empty?
+  protected
+    def build_current_conditions(response = {})
+      return nil if response.nil? || response.empty?
     
-    cc = WeatherManCurrentConditions.new
+      cc = WeatherManCurrentConditions.new
     
-    # Parse out Current Conditions
-    cc.temperature          = response['tmp'][0]
-    cc.feels_like           = response['flik'][0]
-    cc.description          = response['t'][0]
-    cc.icon_code            = response['icon'][0]
-    cc.humidity             = response['hmid'][0]
-    cc.visibility           = response['vis'][0]
-    cc.dew_point            = response['dewp'][0]
-    cc.barometric_pressure  = WeatherManBarometer.new({
-                                :reading      => response['bar'][0]['r'][0],
-                                :description  => response['bar'][0]['d'][0]
-                              })
-    cc.wind                 = WeatherManWind.new({
-                                :speed        => response['wind'][0]['s'][0],
-                                :gust         => response['wind'][0]['gust'][0],
-                                :degrees      => response['wind'][0]['d'][0],
-                                :direction    => response['wind'][0]['t'][0]
-                              })
-    cc.uv                   = WeatherManUV.new({
-                                :index        => response['uv'][0]['i'][0],
-                                :description  => response['uv'][0]['t'][0]
-                              })
-    cc.moon                 = WeatherManMoon.new({
-                                :icon_code    => response['moon'][0]['icon'][0],
-                                :description  => response['moon'][0]['t'][0]
-                              })
-    cc    
-  end
-  
-  def build_forecast(days = {})
-    return nil if days.nil? || days.empty?
-    
-    f = WeatherManForecast.new
-    days.each do |day|
-      f << WeatherManForecastDay.build(day)
+      # Parse out Current Conditions
+      cc.temperature          = response['tmp'][0]
+      cc.feels_like           = response['flik'][0]
+      cc.description          = response['t'][0]
+      cc.icon_code            = response['icon'][0]
+      cc.humidity             = response['hmid'][0]
+      cc.visibility           = response['vis'][0]
+      cc.dew_point            = response['dewp'][0]
+      cc.barometric_pressure  = WeatherManBarometer.new({
+                                  :reading      => response['bar'][0]['r'][0],
+                                  :description  => response['bar'][0]['d'][0]
+                                })
+      cc.wind                 = WeatherManWind.new({
+                                  :speed        => response['wind'][0]['s'][0],
+                                  :gust         => response['wind'][0]['gust'][0],
+                                  :degrees      => response['wind'][0]['d'][0],
+                                  :direction    => response['wind'][0]['t'][0]
+                                })
+      cc.uv                   = WeatherManUV.new({
+                                  :index        => response['uv'][0]['i'][0],
+                                  :description  => response['uv'][0]['t'][0]
+                                })
+      cc.moon                 = WeatherManMoon.new({
+                                  :icon_code    => response['moon'][0]['icon'][0],
+                                  :description  => response['moon'][0]['t'][0]
+                                })
+      cc    
     end
-    f
-  end
+  
+    def build_forecast(days = [])
+      return nil if days.nil? || days.empty?
+    
+      f = WeatherManForecast.new
+      days.each do |day|
+        f << WeatherManForecastDay.build(day)
+      end
+      f
+    end
+    
+    def build_links(links = [])
+      return nil if links.nil? || links.empty?
+      
+      links.map {|link| WeatherManPromotionalLink.new({
+        :text => link['t'][0],
+        :url  => link['l'][0]
+      })}
+    end
 end
 
 class WeatherManCurrentConditions
@@ -175,4 +194,7 @@ class WeatherManMoon < OpenStruct
 end
 
 class WeatherManWind < OpenStruct
+end
+
+class WeatherManPromotionalLink < OpenStruct
 end

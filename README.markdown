@@ -5,6 +5,12 @@ A Ruby Gem that wraps the Weather Channel, inc. XML data feed
 written by Jared Pace, Codeword: Studios (http://codewordstudios.com),
 based on the [rweather gem](http://github.com/ckozus/rweather) by [Carlos Kozuszko](http://www.ckozus.com.ar/blog/).
 
+Dependencies
+------------
+
+1.  XmlSimple
+		`gem install xml-simple`
+
 
 Installation
 ------------
@@ -72,5 +78,13 @@ Look at the forecast:
 		friday.day.chance_percipitation # 0..100
 		
 		night_wind_speed = friday.night.wind.speed
+		
+The Weather Channel requires that you 4 promotional links for them if you use their service. Here's how to access those links:
+		# The array of pr links
+		weather.links
+		
+		# Getting the first links text and url
+		weather.links.first.text
+		weather.links.first.url
 		
 *TODO:* Document all attributes
