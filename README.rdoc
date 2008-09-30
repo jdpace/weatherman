@@ -1,25 +1,26 @@
-WeatherMan
-==========
+= WeatherMan
 
 A Ruby Gem that wraps the Weather Channel, inc. XML data feed
 written by Jared Pace, Codeword: Studios (http://codewordstudios.com),
-based on the [rweather gem](http://github.com/ckozus/rweather) by [Carlos Kozuszko](http://www.ckozus.com.ar/blog/).
+based on the rweather[http://github.com/ckozus/rweather] gem by Carlos Kozuszko - http://www.ckozus.com.ar/blog/.
 
-Dependencies
-------------
+== Dependencies
 
-1.  XmlSimple
-		`gem install xml-simple`
+1. XmlSimple
+	 `gem install xml-simple`
 
+---------------------------
 
-Installation
-------------
+== Installation
+
 
 		% sudo gem sources -a http://gems.github.com # (if you haven't already)
 		% sudo gem install weatherman
 
-Usage
------
+---------------------------
+
+== Usage
+
 
 Find or load a location:
 
@@ -87,4 +88,4 @@ The Weather Channel requires that you 4 promotional links for them if you use th
 		weather.links.first.text
 		weather.links.first.url
 		
-*TODO:* Document all attributes
+<b>TODO:</b> Document all attributes
