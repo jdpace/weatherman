@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- This document is intended only for use by authorized licensees of The  -->
+<!-- Weather Channel. Unauthorized use is prohibited.  Copyright 1995-2008, -->
+<!-- The Weather Channel Interactive, Inc.  All Rights Reserved.            -->
+<weather ver="2.0">
+  <head>
+    <locale>en_US</locale>
+    <form>MEDIUM</form>
+    <ut>F</ut>
+    <ud>mi</ud>
+    <us>mph</us>
+    <up>in</up>
+    <ur>in</ur>
+  </head>
+  <loc id="28277">
+    <dnam>Charlotte, NC (28277)</dnam>
+    <tm>8:40 PM</tm>
+    <lat>35.06</lat>
+    <lon>-80.81</lon>
+    <sunr>7:18 AM</sunr>
+    <suns>7:08 PM</suns>
+    <zone>-4</zone>
+  </loc>
+  <lnks type="prmo">
+    <link pos="1">
+      <l>http://www.weather.com/allergies?par=xoap&amp;site=textlink&amp;cm_ven=XOAP&amp;cm_cat=TextLink&amp;cm_pla=Link1&amp;cm_ite=Allergies</l>
+      <t>Local Pollen Reports</t>
+    </link>
+    <link pos="2">
+      <l>http://www.weather.com/flights?par=xoap&amp;site=textlink&amp;cm_ven=XOAP&amp;cm_cat=TextLink&amp;cm_pla=Link2&amp;cm_ite=BusinessTraveler</l>
+      <t>Airport Conditions</t>
+    </link>
+    <link pos="3">
+      <l>http://www.weather.com/garden?par=xoap&amp;site=textlink&amp;cm_ven=XOAP&amp;cm_cat=TextLink&amp;cm_pla=Link3&amp;cm_ite=Garden</l>
+      <t>Lawn and Garden Weather</t>
+    </link>
+    <link pos="4">
+      <l>http://www.weather.com/traffic?par=xoap&amp;site=textlink&amp;cm_ven=XOAP&amp;cm_cat=TextLink&amp;cm_pla=Link4&amp;cm_ite=Traffic</l>
+      <t>Rush Hour Traffic</t>
+    </link>
+  </lnks>
+  <dayf>
+    <lsup>9/29/08 6:16 PM EDT</lsup>
+    <day d="0" t="Monday" dt="Sep 29">
+      <hi>N/A</hi>
+      <low>59</low>
+      <sunr>7:17 AM</sunr>
+      <suns>7:09 PM</suns>
+      <part p="d">
+        <icon>44</icon>
+        <t>N/A</t>
+        <wind>
+          <s>N/A</s>
+          <gust>N/A</gust>
+          <d>N/A</d>
+          <t>N/A</t>
+        </wind>
+        <bt>N/A</bt>
+        <ppcp>10</ppcp>
+        <hmid>N/A</hmid>
+      </part>
+      <part p="n">
+        <icon>29</icon>
+        <t>Partly Cloudy</t>
+        <wind>
+          <s>3</s>
+          <gust>N/A</gust>
+          <d>56</d>
+          <t>NE</t>
+        </wind>
+        <bt>P Cloudy</bt>
+        <ppcp>10</ppcp>
+        <hmid>86</hmid>
+      </part>
+    </day>
+    <day d="1" t="Tuesday" dt="Sep 30">
+      <hi>82</hi>
+      <low>59</low>
+      <sunr>7:18 AM</sunr>
+      <suns>7:08 PM</suns>
+      <part p="d">
+        <icon>34</icon>
+        <t>Mostly Sunny</t>
+        <wind>
+          <s>7</s>
+          <gust>N/A</gust>
+          <d>267</d>
+          <t>W</t>
+        </wind>
+        <bt>M Sunny</bt>
+        <ppcp>20</ppcp>
+        <hmid>69</hmid>
+      </part>
+      <part p="n">
+        <icon>47</icon>
+        <t>Isolated T-Storms</t>
+        <wind>
+          <s>5</s>
+          <gust>N/A</gust>
+          <d>223</d>
+          <t>SW</t>
+        </wind>
+        <bt>Iso T-Storms</bt>
+        <ppcp>30</ppcp>
+        <hmid>83</hmid>
+      </part>
+    </day>
+    <day d="2" t="Wednesday" dt="Oct 1">
+      <hi>74</hi>
+      <low>51</low>
+      <sunr>7:19 AM</sunr>
+      <suns>7:07 PM</suns>
+      <part p="d">
+        <icon>34</icon>
+        <t>Mostly Sunny</t>
+        <wind>
+          <s>9</s>
+          <gust>N/A</gust>
+          <d>309</d>
+          <t>NW</t>
+        </wind>
+        <bt>M Sunny</bt>
+        <ppcp>20</ppcp>
+        <hmid>63</hmid>
+      </part>
+      <part p="n">
+        <icon>31</icon>
+        <t>Clear</t>
+        <wind>
+          <s>5</s>
+          <gust>N/A</gust>
+
+          <d>328</d>
+          <t>NNW</t>
+        </wind>
+        <bt>Clear</bt>
+        <ppcp>20</ppcp>
+        <hmid>71</hmid>
+      </part>
+    </day>
+  </dayf>
+</weather>
