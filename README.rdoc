@@ -15,7 +15,7 @@ based on the rweather[http://github.com/ckozus/rweather] gem by Carlos Kozuszko 
 
 
 	% sudo gem sources -a http://gems.github.com # (if you haven't already)
-	% sudo gem install weatherman
+	% sudo gem install jdpace-weatherman
 
 ---------------------------
 
