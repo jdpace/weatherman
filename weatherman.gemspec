@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.date     = "2008-09-29"
   
   s.homepage = "http://github.com/jdpace/weatherman"
-  s.summary  = "Ruby gem for accessing the Weather Channel XML API based on rweather"
+  s.summary  = "Ruby gem for accessing the Weather Channel XML API based on rweather."
   s.description = "A wrapper for the Weather Channel, inc (weather.com) XML api covers most features of the api. Current Conditions, Forecasting, and access to the promotional links that you are required to display as part of the API TOS."
   
   s.authors  = ["Jared Pace"]
