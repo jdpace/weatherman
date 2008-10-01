@@ -2,19 +2,20 @@ require 'net/http'
 require 'xmlsimple'
 require 'weather_man_response'
 
-# Raised if partner_id and license_key are not provided
-class WeatherManNotConfiguredError < StandardError
-end
-
-# Raised when the API returns an error
-class WeatherManApiError < StandardError
-end
-
-# Raised when a location is not found by id
-class WeatherManLocationNotFoundError < StandardError
-end
-
 class WeatherMan
+  
+  # Raised if partner_id and license_key are not provided
+  class NotConfiguredError < StandardError
+  end
+
+  # Raised when the API returns an error
+  class ApiError < StandardError
+  end
+  
+  # Raised when there is no response from the server
+  class NoResponseError < StandardError
+  end
+  
   VALID_UNITS = ['s', 'm']
   DEFAULT_UNIT = 's' #standard
   
@@ -94,16 +95,16 @@ class WeatherMan
       response = XmlSimple.xml_in(xml_data)
       
       # Check if a response was returned at all
-      raise(WeatherManNoResponseError, "WeatherMan Error: No Response.") unless response
+      raise(WeatherMan::NoResponseError, "WeatherMan Error: No Response.") unless response
       
       # Check if API call threw an error
-      raise(WeatherManApiError, "WeatherMan Error #{response['err'][0]['type']}: #{response['err'][0]['content']}") if response['err']
+      raise(WeatherMan::ApiError, "WeatherMan Error #{response['err'][0]['type']}: #{response['err'][0]['content']}") if response['err']
       
       response
     end
     
     def self.check_authentication
-      raise(WeatherManNotConfiguredError, 'A partner id and a license key must be provided before acessing the API') unless @@partner_id && @@license_key
+      raise(WeatherMan::NotConfiguredError, 'A partner id and a license key must be provided before acessing the API') unless @@partner_id && @@license_key
     end
     
     # API url for searching for locations

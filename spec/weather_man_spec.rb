@@ -5,13 +5,13 @@ describe WeatherMan, 'trying to access the api before being configured' do
   it 'should throw an error when searching' do
     lambda {
       WeatherMan.search('test')
-    }.should raise_error(WeatherManNotConfiguredError)
+    }.should raise_error(WeatherMan::NotConfiguredError)
   end
   
   it 'should throw an error when initializing' do
     lambda {
       WeatherMan.new('28115')
-    }.should raise_error(WeatherManNotConfiguredError)
+    }.should raise_error(WeatherMan::NotConfiguredError)
   end
 end
 
@@ -45,7 +45,7 @@ describe WeatherMan, 'using a bad partner id / license key' do
   it 'should raise an error when fetching the weather' do
     lambda {
       @weatherman.fetch
-    }.should raise_error(WeatherManApiError)
+    }.should raise_error(WeatherMan::ApiError)
   end
 end
 
@@ -58,7 +58,7 @@ describe WeatherMan, 'trying to use a bad location id' do
   it 'should raise an error when fetching the weather' do
     lambda {
       @weatherman.fetch
-    }.should raise_error(WeatherManApiError)
+    }.should raise_error(WeatherMan::ApiError)
   end
 end
 
