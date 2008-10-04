@@ -15,6 +15,10 @@ describe WeatherManResponse, 'built from a default response' do
     @weather.unit_pressure.should eql('in')
   end
   
+  it 'should grab the local time' do
+    @weather.local_time.should == Time.parse('7:17 PM')
+  end
+  
   it 'should build a CurrentConditions object' do
     @weather.current_conditions.should be_kind_of(WeatherManCurrentConditions)
   end

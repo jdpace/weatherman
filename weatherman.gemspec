@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name     = "weatherman"
-  s.version  = "0.1.1"
-  s.date     = "2008-09-29"
+  s.version  = "0.1.2"
+  s.date     = "2008-10-03"
   
   s.homepage = "http://github.com/jdpace/weatherman"
   s.summary  = "Ruby gem for accessing the Weather Channel XML API based on rweather."

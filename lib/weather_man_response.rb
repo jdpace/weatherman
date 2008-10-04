@@ -1,7 +1,9 @@
 require 'ostruct'
+require 'date'
+require 'time'
 
 class WeatherManResponse
-  attr_reader :current_conditions, :forecast, :api_url, :unit_temperature, :unit_distance, :unit_speed, :unit_pressure, :links
+  attr_reader :current_conditions, :forecast, :api_url, :unit_temperature, :unit_distance, :unit_speed, :unit_pressure, :links, :local_time
   
   def initialize(simple_xml, url = nil)
     @current_conditions = simple_xml['cc'] ? build_current_conditions(simple_xml['cc'][0]) : nil
@@ -15,6 +17,9 @@ class WeatherManResponse
     @unit_distance    = simple_xml['head'][0]['ud'][0]
     @unit_speed       = simple_xml['head'][0]['us'][0]
     @unit_pressure    = simple_xml['head'][0]['up'][0]
+    
+    # Capture some location info
+    @local_time = Time.parse(simple_xml['loc'][0]['tm'][0])
     
     # The api url that was called to generate this response
     @api_url = url
